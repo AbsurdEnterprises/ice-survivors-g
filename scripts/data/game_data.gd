@@ -3,6 +3,7 @@ extends Node
 var weapons = {}
 var passives = {}
 var evolutions = {}
+var meta_data_dict = {}
 
 var run_gold: int = 0
 func add_gold(amount: int) -> void:
@@ -23,6 +24,15 @@ func _ready():
     ]
     for w in w_data:
         weapons[w["id"]] = w
+        
+    var m_data = [
+        {"id": "meta_01", "name": "Might", "stat": "damage_bonus", "max_level": 5, "base_cost": 200, "bonus_per_level": 0.05, "desc": "+5% damage"},
+        {"id": "meta_02", "name": "Armor", "stat": "armor", "max_level": 3, "base_cost": 300, "bonus_per_level": 1, "desc": "+1 Armor"},
+        {"id": "meta_03", "name": "Max Health", "stat": "max_hp", "max_level": 5, "base_cost": 200, "bonus_per_level": 0.10, "desc": "+10% Max Health"},
+        {"id": "meta_04", "name": "Revival", "stat": "revive", "max_level": 1, "base_cost": 1000, "bonus_per_level": 1, "desc": "Revive once with 50% HP"}
+    ]
+    for m in m_data:
+        meta_data_dict[m["id"]] = m
         
     var p_data = [
         {"id": "passive_01", "name": "Max HP", "stat": "max_hp", "max_level": 5, "description": "+10% max HP"},

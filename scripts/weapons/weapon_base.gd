@@ -31,4 +31,7 @@ func fire() -> void:
 func get_damage() -> float:
     var area_mult = 1.0 # TODO player modifiers
     var crit_mult = 1.0 # TODO luck
-    return base_dmg * (1.0 + (level - 1) * 0.25) * area_mult * crit_mult
+    var meta_dmg_bonus = 0.0
+    if SaveManager.save_data.has("meta_upgrades") and SaveManager.save_data["meta_upgrades"].has("meta_01"):
+        meta_dmg_bonus = SaveManager.save_data["meta_upgrades"]["meta_01"] * 0.05
+    return base_dmg * (1.0 + (level - 1) * 0.25) * area_mult * crit_mult * (1.0 + meta_dmg_bonus)

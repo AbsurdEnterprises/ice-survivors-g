@@ -12,11 +12,12 @@ config_version=5
 
 CollisionManager="*res://scripts/collision_manager.gd"
 GameData="*res://scripts/data/game_data.gd"
+SaveManager="*res://scripts/save_manager.gd"
 
 [application]
 
 config/name="ICE Survivors G"
-run/main_scene="res://scenes/main.tscn"
+run/main_scene="res://scenes/main_menu.tscn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
 

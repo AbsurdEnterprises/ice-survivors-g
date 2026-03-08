@@ -16,16 +16,33 @@ var current_level: int = 1
 var arena_locked: bool = false
 var arena_rect: Rect2
 
+var meta_revives: int = 0
+
 @onready var color_rect: ColorRect = $ColorRect
 @onready var pickup_area: Area2D = $PickupArea
 
 func _ready() -> void:
+    apply_meta_upgrades()
     current_hp = max_hp
     if get_tree().has_group("hud"):
         var hud = get_tree().get_nodes_in_group("hud")[0]
         hud.update_hp(current_hp, max_hp)
         hud.update_xp(current_xp, get_xp_required(current_level))
         hud.update_level(current_level)
+
+func apply_meta_upgrades() -> void:
+    if not SaveManager.save_data.has("meta_upgrades"): return
+    var meta_levels = SaveManager.save_data["meta_upgrades"]
+    for m_id in meta_levels:
+        var lvl = meta_levels[m_id]
+        if not GameData.meta_data_dict.has(m_id): continue
+        var data = GameData.meta_data_dict[m_id]
+        var stat = data["stat"]
+        var bonus = data["bonus_per_level"] * lvl
+        match stat:
+            "armor": armor += bonus
+            "max_hp": max_hp *= (1.0 + bonus)
+            "revive": meta_revives += lvl
 
 func _physics_process(delta: float) -> void:
 	var input_dir := Input.get_vector("move_left", "move_right", "move_up", "move_down")
@@ -226,5 +243,15 @@ func take_damage(base_dmg: float) -> void:
 		blink_timer = 0.05
 
 func die() -> void:
-	print("Game Over")
-	get_tree().paused = true
+    if meta_revives > 0:
+        meta_revives -= 1
+        current_hp = max_hp * 0.5
+        is_invulnerable = true
+        i_frame_timer = 3.0
+        if get_tree().has_group("hud"):
+            get_tree().get_nodes_in_group("hud")[0].update_hp(current_hp, max_hp)
+        return
+        
+    SaveManager.end_run()
+    get_tree().paused = true
+    get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
