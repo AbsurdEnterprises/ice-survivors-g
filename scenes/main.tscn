@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://bg2j4vxxxhud" path="res://scenes/hud.tscn" id="5_hud"]
 [ext_resource type="Script" path="res://scripts/xp_pool.gd" id="6_xppool"]
 [ext_resource type="PackedScene" uid="uid://df705lscreen" path="res://scenes/level_up_screen.tscn" id="7_level_up"]
+[ext_resource type="Script" path="res://scripts/projectile_pool.gd" id="8_projpool"]
 
 [node name="Main" type="Node2D"]
 
@@ -60,6 +61,9 @@ player_path = NodePath("../Player")
 
 [node name="XPPool" type="Node" parent="." groups=["xp_pool"]]
 script = ExtResource("6_xppool")
+
+[node name="ProjectilePool" type="Node" parent="." groups=["projectile_pool"]]
+script = ExtResource("8_projpool")
 
 [node name="HUD" parent="." groups=["hud"] instance=ExtResource("5_hud")]
 

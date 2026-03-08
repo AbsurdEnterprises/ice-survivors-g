@@ -9,6 +9,7 @@ var knockback_resistance: float = 1.0 # higher is more resistant
 var is_active: bool = false
 var damage: float = 5.0
 var xp_value: int = 1
+var freeze_timer: float = 0.0
 
 # erratic_02 specific
 var pause_timer: float = 0.0
@@ -87,8 +88,15 @@ func _physics_process(delta: float) -> void:
         # Default behavior (fodder_01)
         velocity = dir * base_speed
         
+    if freeze_timer > 0:
+        freeze_timer -= delta
+        velocity = Vector2.ZERO
+        
     move_and_slide()
     CollisionManager.register(self, global_position, "enemy")
+
+func apply_freeze(duration: float) -> void:
+    freeze_timer = max(freeze_timer, duration)
 
 func take_damage(amount: float) -> void:
     if not is_active: return
