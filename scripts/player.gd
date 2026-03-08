@@ -213,14 +213,13 @@ func apply_passives() -> void:
 	if get_tree().has_group("hud"):
 		get_tree().get_nodes_in_group("hud")[0].update_hp(current_hp, max_hp)
 	
-func check_enemy_collisions() -> void:
+    func check_enemy_collisions() -> void:
 	var nearby = CollisionManager.get_nearby(global_position)
-	var my_rect = Rect2(global_position.x - 16, global_position.y - 16, 32, 32)
 	for ent in nearby:
 		if ent["type"] == "enemy" and is_instance_valid(ent["node"]) and ent["node"].is_active:
 			var enemy = ent["node"]
 			# Simple distance check for fast collision (circle approx)
-			if global_position.distance_squared_to(enemy.global_position) < 400.0: # ~20px overlap
+			if global_position.distance_squared_to(enemy.global_position) < 1024.0: # 32px
 				take_damage(enemy.damage)
 				break
 

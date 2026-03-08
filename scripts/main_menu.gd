@@ -5,6 +5,7 @@ extends Control
 @onready var upgrade_container = $ShopPanel/VBoxContainer/ScrollContainer/ItemList
 
 func _ready() -> void:
+    get_tree().paused = false
     shop_panel.visible = false
     update_gold_display()
     

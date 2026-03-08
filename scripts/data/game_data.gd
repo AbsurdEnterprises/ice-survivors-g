@@ -15,6 +15,22 @@ func add_kill() -> void:
     run_kills += 1
 
 func _ready():
+    var keys = {
+        "move_left": [KEY_A, KEY_LEFT],
+        "move_right": [KEY_D, KEY_RIGHT],
+        "move_up": [KEY_W, KEY_UP],
+        "move_down": [KEY_S, KEY_DOWN]
+    }
+    for action in keys:
+        if not InputMap.has_action(action):
+            InputMap.add_action(action)
+        else:
+            InputMap.action_erase_events(action)
+        for key in keys[action]:
+            var ev = InputEventKey.new()
+            ev.physical_keycode = key
+            InputMap.action_add_event(action, ev)
+            
     var w_data = [
         {"id": "weapon_01", "type": "melee_sweep", "name": "Melee Sweep", "base_dmg": 15, "max_level": 8, "description": "Horizontal sweep"},
         {"id": "weapon_02", "type": "auto_target", "name": "Auto Target", "base_dmg": 12, "max_level": 8, "description": "Fires projectile at nearest"},
