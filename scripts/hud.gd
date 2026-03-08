@@ -15,6 +15,7 @@ func _process(delta: float) -> void:
         var t = int(spawner.time_elapsed)
         var m = t / 60
         var s = t % 60
+        @warning_ignore("integer_division")
         time_label.text = "%02d:%02d" % [m, s]
 
 func update_hp(current: float, maximum: float) -> void:

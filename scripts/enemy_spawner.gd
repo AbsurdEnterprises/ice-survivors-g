@@ -150,8 +150,8 @@ func do_spawn_cycle() -> void:
         
     var m_cap = 300
     var b_s = 10.0
-    var r = 0.05
-    var n_t = min(m_cap, floor(b_s * pow(1.0 + r, time_elapsed / 60.0) + surge))
+    var r_mod = 0.05
+    var n_t = min(m_cap, floor(b_s * pow(1.0 + r_mod, time_elapsed / 60.0) + surge))
     
     var active_enemies = 0
     if pool.has_method("get_active_count"): active_enemies = pool.get_active_count()

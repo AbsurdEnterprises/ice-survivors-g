@@ -11,6 +11,7 @@ func _ready() -> void:
 
 func show_summary(t_elapsed: float, kills: int, gold: int) -> void:
     var t = int(t_elapsed)
+    @warning_ignore("integer_division")
     time_label.text = "Time Survived: %02d:%02d" % [t / 60, t % 60]
     kill_label.text = "Kills: " + str(kills)
     gold_label.text = "Gold Earned: " + str(gold)

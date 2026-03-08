@@ -9,7 +9,7 @@ var shake_intensity: float = 0.0
 func apply_shake(amt: float) -> void:
     shake_intensity = max(shake_intensity, amt)
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
     if shake_intensity > 0:
         offset = Vector2(randf_range(-shake_intensity, shake_intensity), randf_range(-shake_intensity, shake_intensity))
         shake_intensity = lerp(shake_intensity, 0.0, 10.0 * delta)
