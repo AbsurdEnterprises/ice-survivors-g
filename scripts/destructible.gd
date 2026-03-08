@@ -3,6 +3,7 @@ class_name Destructible
 
 var is_active: bool = true
 var current_hp: float = 20.0
+var damage: float = 0.0 # So players bumping it don't crash
 @onready var color_rect = $ColorRect
 
 func _ready() -> void:
