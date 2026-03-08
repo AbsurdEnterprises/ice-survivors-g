@@ -2,6 +2,8 @@
 
 [ext_resource type="PackedScene" uid="uid://df7054h7s3mrx" path="res://scenes/player.tscn" id="1_44xxx"]
 [ext_resource type="Script" path="res://scripts/camera.gd" id="2_camera"]
+[ext_resource type="Script" path="res://scripts/enemy_pool.gd" id="3_pool"]
+[ext_resource type="Script" path="res://scripts/enemy_spawner.gd" id="4_spawn"]
 
 [node name="Main" type="Node2D"]
 
@@ -44,3 +46,11 @@ target_node = NodePath("../Player")
 
 [node name="Player" parent="." instance=ExtResource("1_44xxx")]
 position = Vector2(0, 0)
+
+[node name="EnemyPool" type="Node" parent="."]
+script = ExtResource("3_pool")
+
+[node name="EnemySpawner" type="Node" parent="."]
+script = ExtResource("4_spawn")
+pool_path = NodePath("../EnemyPool")
+player_path = NodePath("../Player")
