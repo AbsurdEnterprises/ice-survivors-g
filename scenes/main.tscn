@@ -1,0 +1,46 @@
+[gd_scene load_steps=3 format=3 uid="uid://cxnmq7jkkw11"]
+
+[ext_resource type="PackedScene" uid="uid://df7054h7s3mrx" path="res://scenes/player.tscn" id="1_44xxx"]
+[ext_resource type="Script" path="res://scripts/camera.gd" id="2_camera"]
+
+[node name="Main" type="Node2D"]
+
+[node name="Background" type="ParallaxBackground" parent="."]
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="Background"]
+motion_mirroring = Vector2(1280, 0)
+
+[node name="Ground" type="ColorRect" parent="Background/ParallaxLayer"]
+offset_left = -640.0
+offset_top = -300.0
+offset_right = 640.0
+offset_bottom = 300.0
+color = Color(1, 1, 1, 1)
+
+[node name="Building1" type="ColorRect" parent="Background/ParallaxLayer"]
+offset_left = -500.0
+offset_top = -250.0
+offset_right = -400.0
+offset_bottom = -150.0
+color = Color(0.5, 0.5, 0.5, 1)
+
+[node name="Building2" type="ColorRect" parent="Background/ParallaxLayer"]
+offset_left = -100.0
+offset_top = 100.0
+offset_right = 100.0
+offset_bottom = 200.0
+color = Color(0.5, 0.5, 0.5, 1)
+
+[node name="Building3" type="ColorRect" parent="Background/ParallaxLayer"]
+offset_left = 300.0
+offset_top = -100.0
+offset_right = 500.0
+offset_bottom = 100.0
+color = Color(0.5, 0.5, 0.5, 1)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+script = ExtResource("2_camera")
+target_node = NodePath("../Player")
+
+[node name="Player" parent="." instance=ExtResource("1_44xxx")]
+position = Vector2(0, 0)
