@@ -18,6 +18,8 @@ var boss_1_spawned: bool = false
 var boss_2_spawned: bool = false
 var boss_final_spawned: bool = false
 
+var destructible_timer: float = 5.0
+
 func _ready() -> void:
     if !pool_path.is_empty():
         pool = get_node(pool_path)
@@ -33,6 +35,26 @@ func _process(delta: float) -> void:
     if spawn_timer <= 0:
         spawn_timer = spawn_interval
         do_spawn_cycle()
+
+    destructible_timer -= delta
+    if destructible_timer <= 0:
+        destructible_timer = randf_range(5.0, 10.0)
+        spawn_destructible()
+
+func spawn_destructible() -> void:
+    var d_scene = preload("res://scenes/destructible.tscn")
+    var d = d_scene.instantiate()
+    get_tree().current_scene.add_child(d)
+    d.global_position = get_spawn_position()
+
+func get_spawn_position() -> Vector2:
+    var vp = get_viewport().get_visible_rect().size
+    var hw = vp.x / 2.0
+    var hh = vp.y / 2.0
+    var theta = randf() * TAU
+    var spawn_x = player.global_position.x + (hw + 64) * cos(theta)
+    var spawn_y = player.global_position.y + (hh + 64) * sin(theta)
+    return Vector2(spawn_x, clamp(spawn_y, -300.0, 300.0))
 
 func get_surge(t_min: float) -> int:
     var s = 0
@@ -128,63 +150,22 @@ func do_spawn_cycle() -> void:
     var r = 0.05
     var n_t = min(m_cap, floor(b_s * pow(1.0 + r, time_elapsed / 60.0) + surge))
     
-    var active_enemies = pool.get_active_count()
+    var active_enemies = 0
+    if pool.has_method("get_active_count"): active_enemies = pool.get_active_count()
+    elif "active_enemies" in pool: active_enemies = pool.active_enemies
+    
     if active_enemies < n_t:
-        var to_spawn = min(10, n_t - active_enemies) # max batched spawns per cycle
-        var hp_mod = 1.0 + (t_min * 0.15)
-        var speed_mod = 1.0 + (t_min * 0.02)
-        
+        var to_spawn = min(20, n_t - active_enemies) # max batched spawns per cycle
         for i in range(to_spawn):
             var enemy = pool.get_enemy()
             if enemy:
-                enemy.activate(get_spawn_position(), get_random_class(t_min), hp_mod, speed_mod)
-    var target_count = min(M_CAP, floor(B_S * pow(1.0 + r, t_min) + surge))
-    
-    var n_to_spawn = target_count - pool.active_enemies
-    
-    # Let's cap spawns per tick to avoid framedrops
-    n_to_spawn = min(n_to_spawn, 20)
-    
-    for i in range(n_to_spawn):
-        var enemy = pool.get_enemy()
-        if enemy == null:
-            break
-            
-        spawn_enemy(enemy, t_min)
+                spawn_enemy(enemy, t_min)
 
 func spawn_enemy(enemy: Node, t_min: float) -> void:
-    var vp = get_viewport().get_visible_rect().size
-    var hw = vp.x / 2.0
-    var hh = vp.y / 2.0
-    var theta = randf() * TAU
+    var spawn_pos = get_spawn_position()
     
-    var spawn_x = player.global_position.x + (hw + 64) * cos(theta)
-    var spawn_y = player.global_position.y + (hh + 64) * sin(theta)
-    
-    # Stage 1 vertical constraint: clamped Y
-    spawn_y = clamp(spawn_y, -300.0, 300.0)
-    
-    # HP and speed scaling
     var hp_mod = 1.0 + (t_min * 0.15)
     var speed_mod = 1.0 + (t_min * 0.02)
-    
-    # Class composition by time
     var e_class = get_random_class(t_min)
     
-    enemy.activate(Vector2(spawn_x, spawn_y), e_class, hp_mod, speed_mod)
-
-func get_random_class(t_min: float) -> String:
-    var roll = randf()
-    if t_min < 3.0:
-        return "fodder_01"
-    elif t_min < 7.0:
-        if roll < 0.60: return "fodder_01"
-        return "erratic_02"
-    elif t_min < 12.0:
-        if roll < 0.40: return "fodder_01"
-        elif roll < 0.70: return "erratic_02"
-        return "fodder_01" # TODO: tank and ranged not added yet
-    else:
-        # Fallback for now until others are added
-        if roll < 0.50: return "fodder_01"
-        return "erratic_02"
+    enemy.activate(spawn_pos, e_class, hp_mod, speed_mod)

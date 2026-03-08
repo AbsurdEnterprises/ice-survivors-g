@@ -61,6 +61,28 @@ func check_xp_collection() -> void:
 		elif area.is_in_group("treasure_chest"):
 			open_chest()
 			area.queue_free()
+		elif area.is_in_group("pickup"):
+			collect_pickup(area.pickup_type)
+			area.queue_free()
+
+func collect_pickup(ptype: String) -> void:
+	match ptype:
+		"heal":
+			current_hp = min(max_hp, current_hp + 30.0)
+			if get_tree().has_group("hud"):
+				get_tree().get_nodes_in_group("hud")[0].update_hp(current_hp, max_hp)
+		"gold":
+			GameData.add_gold(10)
+		"magnet":
+			var gems = get_tree().get_nodes_in_group("xp_gem")
+			for g in gems:
+				if g.is_active:
+					g.global_position = global_position
+		"nuke":
+			var enemies = get_tree().get_nodes_in_group("enemy")
+			for e in enemies:
+				if e.is_active and e.has_method("take_damage"):
+					e.take_damage(99999.0)
 
 func open_chest() -> void:
 	var evolved = false

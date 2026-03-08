@@ -4,6 +4,10 @@ var weapons = {}
 var passives = {}
 var evolutions = {}
 
+var run_gold: int = 0
+func add_gold(amount: int) -> void:
+    run_gold += amount
+
 func _ready():
     var w_data = [
         {"id": "weapon_01", "type": "melee_sweep", "name": "Melee Sweep", "base_dmg": 15, "max_level": 8, "description": "Horizontal sweep"},
