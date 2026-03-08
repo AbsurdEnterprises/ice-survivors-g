@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://df7054hbossj"]
+
+[ext_resource type="Script" path="res://scripts/boss.gd" id="1_boss"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bosshp"]
+size = Vector2(64, 64)
+
+[node name="Boss" type="CharacterBody2D" groups=["enemy"]]
+collision_layer = 2
+collision_mask = 5
+script = ExtResource("1_boss")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+color = Color(0.5, 0, 0.5, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_bosshp")

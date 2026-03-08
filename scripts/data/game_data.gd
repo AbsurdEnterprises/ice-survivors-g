@@ -34,3 +34,11 @@ func _ready():
     ]
     for p in p_data:
         passives[p["id"]] = p
+        
+    var e_data = [
+        { "id": "evo_02", "requires_weapon": "weapon_02", "requires_passive": "passive_02", "replaces": "weapon_02", "name": "Continuous Beam", "base_dmg": 20, "cooldown": 0.0, "max_level": 1, "description": "Fires continuous piercing beam" },
+        { "id": "evo_05", "requires_weapon": "weapon_05", "requires_passive": "passive_05", "replaces": "weapon_05", "name": "HP Steal Aura", "base_dmg": 10, "cooldown": 0.5, "max_level": 1, "description": "Massive aura steals enemy HP" }
+    ]
+    for e in e_data:
+        evolutions[e["id"]] = e
+        weapons[e["id"]] = e # Evolutions act as weapons in our system

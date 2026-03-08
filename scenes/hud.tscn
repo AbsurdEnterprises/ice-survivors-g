@@ -39,3 +39,11 @@ offset_right = 1260.0
 offset_bottom = 40.0
 text = "Lv 1"
 horizontal_alignment = 2
+
+[node name="BossHPBar" type="ProgressBar" parent="."]
+visible = false
+offset_left = 340.0
+offset_top = 680.0
+offset_right = 940.0
+offset_bottom = 700.0
+show_percentage = false

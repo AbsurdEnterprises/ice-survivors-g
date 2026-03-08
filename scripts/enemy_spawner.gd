@@ -14,6 +14,10 @@ var time_elapsed: float = 0.0
 var spawn_timer: float = 0.0
 var spawn_interval: float = 0.5 # check twice a second
 
+var boss_1_spawned: bool = false
+var boss_2_spawned: bool = false
+var boss_final_spawned: bool = false
+
 func _ready() -> void:
     if !pool_path.is_empty():
         pool = get_node(pool_path)
@@ -39,8 +43,34 @@ func get_surge(t_min: float) -> int:
     if t_min >= 25.0 and t_min < 25.16: s += 200
     return s
 
+func spawn_boss(b_id: String, t_min: float) -> void:
+    var boss_scene = preload("res://scenes/boss.tscn")
+    var boss = boss_scene.instantiate()
+    var vp = get_viewport().get_visible_rect().size
+    var spawn_pos = player.global_position + Vector2(0, -vp.y/2 + 100)
+    get_tree().current_scene.add_child(boss)
+    var hp_mod = 1.0 + (t_min * 0.15)
+    boss.activate(spawn_pos, b_id, hp_mod)
+    
+    var cam = get_viewport().get_camera_2d()
+    if cam: cam.is_locked = true
+    player.arena_locked = true
+    var cam_pos = cam.global_position if cam else player.global_position
+    player.arena_rect = Rect2(cam_pos - vp/2, vp)
+
 func do_spawn_cycle() -> void:
     var t_min = time_elapsed / 60.0
+    
+    if t_min >= 10.0 and not boss_1_spawned:
+        spawn_boss("boss_01", t_min)
+        boss_1_spawned = true
+    if t_min >= 20.0 and not boss_2_spawned:
+        spawn_boss("boss_02", t_min)
+        boss_2_spawned = true
+    if t_min >= 30.0 and not boss_final_spawned:
+        spawn_boss("boss_final", t_min)
+        boss_final_spawned = true
+        
     if t_min >= 30.0:
         return # Boss phase, stop standard spawns
         
