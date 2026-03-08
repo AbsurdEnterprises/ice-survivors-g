@@ -2,6 +2,8 @@ extends Node
 
 const CELL_SIZE: int = 128
 var grid: Dictionary = {}
+func _ready() -> void:
+    process_physics_priority = -100
 
 func _physics_process(_delta: float) -> void:
     grid.clear()

@@ -22,7 +22,8 @@ var meta_revives: int = 0
 @onready var pickup_area: Area2D = $PickupArea
 
 func _ready() -> void:
-	apply_meta_upgrades()
+    process_physics_priority = 100
+    apply_meta_upgrades()
 	current_hp = max_hp
 	if get_tree().has_group("hud"):
 		var hud = get_tree().get_nodes_in_group("hud")[0]
