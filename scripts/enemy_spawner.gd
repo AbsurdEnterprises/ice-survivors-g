@@ -58,6 +58,46 @@ func spawn_boss(b_id: String, t_min: float) -> void:
     var cam_pos = cam.global_position if cam else player.global_position
     player.arena_rect = Rect2(cam_pos - vp/2, vp)
 
+func get_random_class(t_min: float) -> String:
+    var roll = randf()
+    if t_min < 3.0:
+        return "fodder_01"
+    elif t_min < 7.0:
+        if roll < 0.60: return "fodder_01"
+        elif roll < 0.95: return "erratic_02"
+        return "ranged_04"
+    elif t_min < 12.0:
+        if roll < 0.40: return "fodder_01"
+        elif roll < 0.70: return "erratic_02"
+        elif roll < 0.85: return "tank_03"
+        return "ranged_04"
+    elif t_min < 20.0:
+        if roll < 0.25: return "fodder_01"
+        elif roll < 0.50: return "erratic_02"
+        elif roll < 0.75: return "tank_03"
+        return "ranged_04"
+    else:
+        if roll < 0.15: return "fodder_01"
+        elif roll < 0.35: return "erratic_02"
+        elif roll < 0.65: return "tank_03"
+        return "ranged_04"
+
+func spawn_hazard() -> void:
+    var haz_scene = preload("res://scenes/hazard.tscn")
+    var haz = haz_scene.instantiate()
+    var vp = get_viewport().get_visible_rect().size
+    var cam = get_viewport().get_camera_2d()
+    var center = cam.global_position if cam else player.global_position
+    
+    var side = randi() % 2
+    var y_offset = randf_range(-vp.y/2.0, vp.y/2.0)
+    var x_offset = (vp.x/2.0 + 300.0) * (1 if side == 0 else -1)
+    
+    haz.global_position = center + Vector2(x_offset, y_offset)
+    haz.velocity = Vector2(-2 if side == 0 else 2, 0) * 400.0
+    
+    get_tree().current_scene.add_child(haz)
+
 func do_spawn_cycle() -> void:
     var t_min = time_elapsed / 60.0
     
@@ -75,6 +115,29 @@ func do_spawn_cycle() -> void:
         return # Boss phase, stop standard spawns
         
     var surge = get_surge(t_min)
+    
+    var haz_prob = 0.0
+    if t_min >= 7.0 and t_min < 12.0: haz_prob = 0.05
+    elif t_min >= 12.0 and t_min < 20.0: haz_prob = 0.10
+    elif t_min >= 20.0: haz_prob = 0.15
+    if randf() < haz_prob:
+        spawn_hazard()
+        
+    var m_cap = 300
+    var b_s = 10.0
+    var r = 0.05
+    var n_t = min(m_cap, floor(b_s * pow(1.0 + r, time_elapsed / 60.0) + surge))
+    
+    var active_enemies = pool.get_active_count()
+    if active_enemies < n_t:
+        var to_spawn = min(10, n_t - active_enemies) # max batched spawns per cycle
+        var hp_mod = 1.0 + (t_min * 0.15)
+        var speed_mod = 1.0 + (t_min * 0.02)
+        
+        for i in range(to_spawn):
+            var enemy = pool.get_enemy()
+            if enemy:
+                enemy.activate(get_spawn_position(), get_random_class(t_min), hp_mod, speed_mod)
     var target_count = min(M_CAP, floor(B_S * pow(1.0 + r, t_min) + surge))
     
     var n_to_spawn = target_count - pool.active_enemies
