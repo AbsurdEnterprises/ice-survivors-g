@@ -8,6 +8,10 @@
 
 config_version=5
 
+[autoload]
+
+CollisionManager="*res://scripts/collision_manager.gd"
+
 [application]
 
 config/name="ICE Survivors G"

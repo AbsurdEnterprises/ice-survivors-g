@@ -1,0 +1,25 @@
+[gd_scene load_steps=2 format=3 uid="uid://bg2j4vxxxhud"]
+
+[ext_resource type="Script" path="res://scripts/hud.gd" id="1_hudgd"]
+
+[node name="HUD" type="CanvasLayer"]
+script = ExtResource("1_hudgd")
+
+[node name="HPBar" type="ProgressBar" parent="."]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 320.0
+offset_bottom = 40.0
+value = 100.0
+show_percentage = false
+
+[node name="HPLabel" type="Label" parent="HPBar"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "120 / 120"
+horizontal_alignment = 1
+vertical_alignment = 1

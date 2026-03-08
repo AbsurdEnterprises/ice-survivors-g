@@ -88,3 +88,15 @@ func _physics_process(delta: float) -> void:
         velocity = dir * base_speed
         
     move_and_slide()
+    CollisionManager.register(self, global_position, "enemy")
+
+func take_damage(amount: float) -> void:
+    if not is_active: return
+    current_hp -= amount
+    if current_hp <= 0:
+        die()
+
+func die() -> void:
+    if get_tree().has_group("xp_pool"):
+        get_tree().get_first_node_in_group("xp_pool").spawn_gem(global_position, xp_value)
+    deactivate()

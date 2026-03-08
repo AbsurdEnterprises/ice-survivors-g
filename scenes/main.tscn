@@ -4,6 +4,8 @@
 [ext_resource type="Script" path="res://scripts/camera.gd" id="2_camera"]
 [ext_resource type="Script" path="res://scripts/enemy_pool.gd" id="3_pool"]
 [ext_resource type="Script" path="res://scripts/enemy_spawner.gd" id="4_spawn"]
+[ext_resource type="PackedScene" uid="uid://bg2j4vxxxhud" path="res://scenes/hud.tscn" id="5_hud"]
+[ext_resource type="Script" path="res://scripts/xp_pool.gd" id="6_xppool"]
 
 [node name="Main" type="Node2D"]
 
@@ -50,7 +52,12 @@ position = Vector2(0, 0)
 [node name="EnemyPool" type="Node" parent="."]
 script = ExtResource("3_pool")
 
-[node name="EnemySpawner" type="Node" parent="."]
+[node name="EnemySpawner" type="Node" parent="." groups=["spawner"]]
 script = ExtResource("4_spawn")
 pool_path = NodePath("../EnemyPool")
 player_path = NodePath("../Player")
+
+[node name="XPPool" type="Node" parent="." groups=["xp_pool"]]
+script = ExtResource("6_xppool")
+
+[node name="HUD" parent="." groups=["hud"] instance=ExtResource("5_hud")]
