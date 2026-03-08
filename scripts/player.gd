@@ -235,6 +235,10 @@ func take_damage(base_dmg: float) -> void:
 	if get_tree().has_group("hud"):
 		get_tree().get_nodes_in_group("hud")[0].update_hp(current_hp, max_hp)
 	
+	var cam = get_viewport().get_camera_2d()
+	if cam and cam.has_method("apply_shake"):
+		cam.apply_shake(15.0)
+	
 	if current_hp <= 0:
 		die()
 	else:
@@ -254,4 +258,11 @@ func die() -> void:
         
     SaveManager.end_run()
     get_tree().paused = true
-    get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+    
+    var summary_scene = preload("res://scenes/summary_screen.tscn")
+    var summary = summary_scene.instantiate()
+    get_tree().root.add_child(summary)
+    
+    var spawner = get_tree().get_first_node_in_group("spawner")
+    var t_min = spawner.time_elapsed / 60.0 if spawner else 0.0
+    summary.show_summary(t_min * 60.0, GameData.run_kills, GameData.run_gold)

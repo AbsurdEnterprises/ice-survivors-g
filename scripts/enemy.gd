@@ -140,10 +140,18 @@ func apply_freeze(duration: float) -> void:
 func take_damage(amount: float) -> void:
     if not is_active: return
     current_hp -= amount
+    
+    var dmg_scene = preload("res://scenes/damage_number.tscn")
+    var dmg = dmg_scene.instantiate()
+    get_tree().current_scene.add_child(dmg)
+    dmg.setup(int(amount), false)
+    dmg.global_position = global_position
+    
     if current_hp <= 0:
         die()
 
 func die() -> void:
+    GameData.add_kill()
     if get_tree().has_group("xp_pool"):
         get_tree().get_first_node_in_group("xp_pool").spawn_gem(global_position, xp_value)
     deactivate()

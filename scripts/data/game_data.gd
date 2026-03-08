@@ -6,8 +6,13 @@ var evolutions = {}
 var meta_data_dict = {}
 
 var run_gold: int = 0
+var run_kills: int = 0
+
 func add_gold(amount: int) -> void:
     run_gold += amount
+
+func add_kill() -> void:
+    run_kills += 1
 
 func _ready():
     var w_data = [

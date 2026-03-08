@@ -75,7 +75,10 @@ func spawn_boss(b_id: String, t_min: float) -> void:
     boss.activate(spawn_pos, b_id, hp_mod)
     
     var cam = get_viewport().get_camera_2d()
-    if cam: cam.is_locked = true
+    if cam: 
+        cam.is_locked = true
+        if cam.has_method("apply_shake"): cam.apply_shake(30.0)
+        
     player.arena_locked = true
     var cam_pos = cam.global_position if cam else player.global_position
     player.arena_rect = Rect2(cam_pos - vp/2, vp)

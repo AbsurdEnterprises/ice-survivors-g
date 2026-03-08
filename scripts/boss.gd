@@ -104,6 +104,12 @@ func take_damage(amount: float) -> void:
     if not is_active: return
     current_hp -= amount
     
+    var dmg_scene = preload("res://scenes/damage_number.tscn")
+    var dmg = dmg_scene.instantiate()
+    get_tree().current_scene.add_child(dmg)
+    dmg.setup(int(amount), false)
+    dmg.global_position = global_position
+    
     if get_tree().has_group("hud"):
         get_tree().get_nodes_in_group("hud")[0].update_boss_hp(current_hp, max_hp)
         
@@ -111,6 +117,7 @@ func take_damage(amount: float) -> void:
         die()
 
 func die() -> void:
+    GameData.add_kill()
     if boss_id != "boss_final":
         var chest_scene = preload("res://scenes/treasure_chest.tscn")
         var chest = chest_scene.instantiate()

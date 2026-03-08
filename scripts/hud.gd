@@ -5,6 +5,17 @@ extends CanvasLayer
 @onready var xp_bar: ProgressBar = $XPBar
 @onready var level_label: Label = $LevelLabel
 @onready var boss_hp_bar: ProgressBar = $BossHPBar
+@onready var time_label: Label = $TimeLabel
+@onready var kill_label: Label = $KillLabel
+
+func _process(delta: float) -> void:
+    kill_label.text = "Kills: " + str(GameData.run_kills)
+    var spawner = get_tree().get_first_node_in_group("spawner")
+    if spawner:
+        var t = int(spawner.time_elapsed)
+        var m = t / 60
+        var s = t % 60
+        time_label.text = "%02d:%02d" % [m, s]
 
 func update_hp(current: float, maximum: float) -> void:
     hp_bar.max_value = maximum
