@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://scripts/enemy_spawner.gd" id="4_spawn"]
 [ext_resource type="PackedScene" uid="uid://bg2j4vxxxhud" path="res://scenes/hud.tscn" id="5_hud"]
 [ext_resource type="Script" path="res://scripts/xp_pool.gd" id="6_xppool"]
+[ext_resource type="PackedScene" uid="uid://df705lscreen" path="res://scenes/level_up_screen.tscn" id="7_level_up"]
 
 [node name="Main" type="Node2D"]
 
@@ -61,3 +62,5 @@ player_path = NodePath("../Player")
 script = ExtResource("6_xppool")
 
 [node name="HUD" parent="." groups=["hud"] instance=ExtResource("5_hud")]
+
+[node name="LevelUpScreen" parent="." instance=ExtResource("7_level_up")]
